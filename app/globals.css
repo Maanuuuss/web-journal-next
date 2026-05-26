@@ -1,3 +1,12 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+:root {
+  --color-dark-bg: #0f0f0f;
+  --color-dark-text: #e5e5e5;
+  --color-dark-accent: #6d28d9;
+}
+
+body {
+  background: var(--color-dark-bg);
+  color: var(--color-dark-text);
+}
