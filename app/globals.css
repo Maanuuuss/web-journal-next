@@ -1,12 +1,19 @@
 @import "tailwindcss";
 
+<<<<<<< HEAD
 :root {
+=======
+@layer theme {
+>>>>>>> ebad77597a92f636e6dc9fdf180fad7700042e8f
   --color-dark-bg: #0f0f0f;
   --color-dark-text: #e5e5e5;
   --color-dark-accent: #6d28d9;
 }
+<<<<<<< HEAD
 
 body {
   background: var(--color-dark-bg);
   color: var(--color-dark-text);
 }
+=======
+>>>>>>> ebad77597a92f636e6dc9fdf180fad7700042e8f
