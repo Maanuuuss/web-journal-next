@@ -1,11 +1,17 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./app/**/*.{js,ts,jsx,tsx}",       // 👈 IMPORTANTÍSIMO
-    "./components/**/*.{js,ts,jsx,tsx}", // si tienes carpeta components
+    "./app/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        "dark-bg": "#0f0f0f",
+        "dark-text": "#e5e5e5",
+        "dark-accent": "#6d28d9",
+      },
+    },
   },
   plugins: [],
 };
