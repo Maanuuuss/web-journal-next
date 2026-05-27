@@ -1,40 +1,81 @@
+"use client";
+
+import { useState } from "react";
+import TradesTable from "../components/TradesTable";
+import AddTradeModal from "../components/AddTradeModal";
+import { useTrades } from "../hooks/useTrades";
+
 export default function TradesPage() {
+  const { trades, addTrade } = useTrades();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filter, setFilter] = useState("all");
+
+  const filteredTrades =
+    filter === "wins"
+      ? trades.filter((t) => t.profit > 0)
+      : filter === "losses"
+      ? trades.filter((t) => t.profit < 0)
+      : trades;
+
   return (
     <div className="space-y-8">
-
-      {/* Título + botón */}
-      <div className="flex items-center justify-between">
+      <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Trades</h1>
-        <button className="px-4 py-2 bg-dark-accent text-dark-bg font-semibold rounded hover:opacity-80">
-          Nuevo trade
+
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="px-4 py-2 bg-dark-accent text-black font-semibold rounded-md hover:bg-dark-accent/80 transition-all duration-200"
+        >
+          Añadir Trade
+        </button>
+      </div>
+
+      {/* Filtros */}
+      <div className="flex gap-4">
+        <button
+          onClick={() => setFilter("all")}
+          className={`px-3 py-1 rounded-md border ${
+            filter === "all"
+              ? "bg-dark-accent text-black"
+              : "bg-dark-bg text-white border-dark-accent"
+          }`}
+        >
+          Todos
+        </button>
+
+        <button
+          onClick={() => setFilter("wins")}
+          className={`px-3 py-1 rounded-md border ${
+            filter === "wins"
+              ? "bg-green-400 text-black"
+              : "bg-dark-bg text-white border-dark-accent"
+          }`}
+        >
+          Ganadores
+        </button>
+
+        <button
+          onClick={() => setFilter("losses")}
+          className={`px-3 py-1 rounded-md border ${
+            filter === "losses"
+              ? "bg-red-400 text-black"
+              : "bg-dark-bg text-white border-dark-accent"
+          }`}
+        >
+          Perdedores
         </button>
       </div>
 
       {/* Tabla */}
-      <div className="overflow-x-auto">
-        <table className="w-full border border-dark-accent rounded-lg">
-          <thead className="bg-dark-bg border-b border-dark-accent">
-            <tr>
-              <th className="p-3 text-left">Fecha</th>
-              <th className="p-3 text-left">Par</th>
-              <th className="p-3 text-left">Dirección</th>
-              <th className="p-3 text-left">Resultado</th>
-              <th className="p-3 text-left">Riesgo</th>
-            </tr>
-          </thead>
+      <TradesTable trades={filteredTrades} />
 
-          <tbody>
-            <tr className="border-b border-dark-accent/40">
-              <td className="p-3">—</td>
-              <td className="p-3">—</td>
-              <td className="p-3">—</td>
-              <td className="p-3 text-green-400">—</td>
-              <td className="p-3">—</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
+      {/* Modal */}
+      {isModalOpen && (
+        <AddTradeModal
+          close={() => setIsModalOpen(false)}
+          onSave={addTrade}
+        />
+      )}
     </div>
   );
 }
