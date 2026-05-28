@@ -41,15 +41,16 @@ export default function ICTChart({
   candles: Candle[];
   ict: ICTData;
 }) {
+  // Si no hay velas, mostramos mensaje y evitamos errores
   if (!candles || candles.length === 0) {
     return (
-      <div className="p-6 border border-dark-accent rounded-lg bg-dark-bg/60">
-        No hay velas disponibles para este trade.
+      <div className="p-6 border border-dark-accent rounded-lg bg-dark-bg/60 text-center text-gray-400">
+        No hay datos de velas para este trade.
       </div>
     );
   }
 
-  // Añadimos un índice para poder usarlo en el eje X y en las zonas
+  // Añadimos índice para el eje X
   const data = candles.map((c, i) => ({
     ...c,
     index: i,
@@ -65,60 +66,61 @@ export default function ICTChart({
       <h3 className="text-xl font-semibold mb-4">Mapa ICT del Trade</h3>
 
       <div className="w-full h-96">
-        <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={data}>
-            {/* Eje X por índice (oculto) */}
-            <XAxis dataKey="index" hide />
-
-            {/* Eje Y */}
-            <YAxis domain={["auto", "auto"]} stroke="#aaa" />
-
-            {/* Tooltip */}
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "#1a1a1a",
-                border: "1px solid #333",
-                color: "#fff",
-              }}
-              labelFormatter={(value: any) => {
-                const idx = Number(value);
-                const candle = data[idx];
-                return candle?.time || "";
-              }}
-            />
-
-            {/* Área del precio (close) */}
-            <Area
-              type="monotone"
-              dataKey="close"
-              stroke="#4ade80"
-              fill="#4ade8033"
-            />
-
-            {/* Línea Premium/Discount */}
-            <Line
-              type="monotone"
-              dataKey={() => mid}
-              stroke="#f97316"
-              strokeDasharray="4 4"
-              dot={false}
-            />
-
-            {/* FVG dibujados como zonas */}
-            {ict.fvg?.map((fvg, i) => (
-              <ReferenceArea
-                key={i}
-                x1={fvg.index}
-                x2={fvg.index + 1}
-                y1={low}
-                y2={high}
-                fill={fvg.type === "bullish" ? "#22c55e33" : "#ef444433"}
-                stroke={fvg.type === "bullish" ? "#22c55e" : "#ef4444"}
-                strokeOpacity={0.6}
+        {data && data.length > 0 ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart data={data}>
+              {/* Eje X */}
+              <XAxis dataKey="index" hide />
+              {/* Eje Y */}
+              <YAxis domain={["auto", "auto"]} stroke="#aaa" />
+              {/* Tooltip */}
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#1a1a1a",
+                  border: "1px solid #333",
+                  color: "#fff",
+                }}
+                labelFormatter={(value: any) => {
+                  const idx = Number(value);
+                  const candle = data[idx];
+                  return candle?.time || "";
+                }}
               />
-            ))}
-          </ComposedChart>
-        </ResponsiveContainer>
+              {/* Área del precio */}
+              <Area
+                type="monotone"
+                dataKey="close"
+                stroke="#4ade80"
+                fill="#4ade8033"
+              />
+              {/* Línea Premium/Discount */}
+              <Line
+                type="monotone"
+                dataKey={() => mid}
+                stroke="#f97316"
+                strokeDasharray="4 4"
+                dot={false}
+              />
+              {/* FVG dibujados */}
+              {ict.fvg?.map((fvg, i) => (
+                <ReferenceArea
+                  key={i}
+                  x1={fvg.index}
+                  x2={fvg.index + 1}
+                  y1={low}
+                  y2={high}
+                  fill={fvg.type === "bullish" ? "#22c55e33" : "#ef444433"}
+                  stroke={fvg.type === "bullish" ? "#22c55e" : "#ef4444"}
+                  strokeOpacity={0.6}
+                />
+              ))}
+            </ComposedChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="text-center text-gray-400 mt-10">
+            No hay datos de velas para este trade.
+          </div>
+        )}
       </div>
 
       {/* Info ICT */}
